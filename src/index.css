@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Palm — Forest & Sage design system. Gender-neutral, premium healthcare. All HSL. */
+
+@layer base {
+  :root {
+    /* Base — warm cream */
+    --background: 42 38% 96%;
+    --foreground: 155 25% 12%;
+
+    --card: 42 30% 99%;
+    --card-foreground: 155 25% 12%;
+
+    --popover: 42 30% 99%;
+    --popover-foreground: 155 25% 12%;
+
+    /* Primary — deep forest green */
+    --primary: 158 38% 22%;
+    --primary-foreground: 42 38% 97%;
+    --primary-glow: 152 32% 45%;
+
+    /* Secondary — soft sage */
+    --secondary: 140 22% 86%;
+    --secondary-foreground: 158 38% 18%;
+
+    --muted: 42 25% 92%;
+    --muted-foreground: 155 12% 38%;
+
+    --accent: 145 28% 78%;
+    --accent-foreground: 158 40% 18%;
+
+    --destructive: 8 65% 58%;
+    --destructive-foreground: 42 38% 97%;
+
+    --border: 145 15% 85%;
+    --input: 145 15% 85%;
+    --ring: 158 38% 22%;
+
+    --radius: 1.5rem;
+
+    /* Status colors — organic */
+    --status-good: 152 45% 45%;
+    --status-warn: 35 80% 58%;
+    --status-bad: 8 65% 60%;
+
+    /* Palette — sage / eucalyptus / cream / sand (kept legacy names for compat) */
+    --pastel-peach: 38 45% 88%;     /* warm sand */
+    --pastel-pink: 145 22% 86%;     /* soft sage */
+    --pastel-lavender: 158 22% 82%; /* eucalyptus */
+    --pastel-blue: 175 25% 84%;     /* misty teal */
+    --pastel-mint: 145 35% 82%;     /* fresh sage */
+    --pastel-yellow: 45 50% 90%;    /* cream */
+    --pastel-coral: 22 45% 85%;     /* clay */
+
+    /* Dreamy gradients — green/sage/cream */
+    --gradient-dawn: linear-gradient(135deg, hsl(45 50% 92%) 0%, hsl(140 28% 86%) 50%, hsl(158 30% 80%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(38 45% 88%) 0%, hsl(145 25% 84%) 100%);
+    --gradient-mint: linear-gradient(135deg, hsl(145 35% 84%) 0%, hsl(165 30% 86%) 100%);
+    --gradient-sky: linear-gradient(135deg, hsl(175 28% 86%) 0%, hsl(155 25% 88%) 100%);
+    --gradient-warm: linear-gradient(160deg, hsl(45 55% 94%) 0%, hsl(38 45% 88%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(45 50% 94%) 0%, hsl(140 25% 90%) 35%, hsl(158 28% 84%) 70%, hsl(165 25% 82%) 100%);
+    --gradient-baby: linear-gradient(135deg, hsl(140 28% 88%) 0%, hsl(45 50% 92%) 100%);
+    --gradient-parent: linear-gradient(135deg, hsl(175 25% 86%) 0%, hsl(158 25% 84%) 100%);
+    --gradient-ring: conic-gradient(from 180deg, hsl(158 38% 35%) 0deg, hsl(152 35% 50%) 90deg, hsl(165 30% 55%) 180deg, hsl(145 32% 45%) 270deg, hsl(158 38% 35%) 360deg);
+
+    /* Shadows — soft forest tint */
+    --shadow-soft: 0 4px 24px -8px hsl(158 40% 20% / 0.12);
+    --shadow-card: 0 8px 32px -12px hsl(158 40% 18% / 0.15);
+    --shadow-float: 0 20px 60px -20px hsl(158 45% 18% / 0.22);
+    --shadow-glow: 0 0 40px hsl(152 35% 55% / 0.45);
+
+    /* Transitions */
+    --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --sidebar-background: 42 38% 96%;
+    --sidebar-foreground: 155 25% 12%;
+    --sidebar-primary: 158 38% 22%;
+    --sidebar-primary-foreground: 42 38% 97%;
+    --sidebar-accent: 42 25% 92%;
+    --sidebar-accent-foreground: 155 25% 12%;
+    --sidebar-border: 145 15% 85%;
+    --sidebar-ring: 158 38% 22%;
+  }
+
+  .dark {
+    --background: 158 30% 8%;
+    --foreground: 42 35% 94%;
+    --card: 158 25% 12%;
+    --card-foreground: 42 35% 94%;
+    --popover: 158 25% 12%;
+    --popover-foreground: 42 35% 94%;
+    --primary: 145 40% 65%;
+    --primary-foreground: 158 35% 10%;
+    --secondary: 158 20% 18%;
+    --secondary-foreground: 42 35% 94%;
+    --muted: 158 20% 16%;
+    --muted-foreground: 145 12% 65%;
+    --accent: 158 20% 18%;
+    --accent-foreground: 42 35% 94%;
+    --destructive: 8 60% 55%;
+    --destructive-foreground: 42 35% 94%;
+    --border: 158 20% 20%;
+    --input: 158 20% 20%;
+    --ring: 145 40% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html, body, #root {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .font-display {
+    font-family: 'Fraunces', 'Times New Roman', serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+    /* Disable discretionary ligatures, swashes, and stylistic alternates
+       that produce odd letterforms (e.g., the swashy "J", quirky "ct"). */
+    font-feature-settings: "liga" 1, "calt" 1, "dlig" 0, "swsh" 0, "salt" 0, "ss01" 0, "ss02" 0, "ss03" 0;
+    font-variant-ligatures: common-ligatures no-discretionary-ligatures;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: hsl(0 0% 100% / 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid hsl(0 0% 100% / 0.5);
+  }
+
+  .glass-dark {
+    background: hsl(158 30% 12% / 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+  }
+
+  .gradient-hero { background: var(--gradient-hero); }
+  .gradient-dawn { background: var(--gradient-dawn); }
+  .gradient-sunset { background: var(--gradient-sunset); }
+  .gradient-mint { background: var(--gradient-mint); }
+  .gradient-sky { background: var(--gradient-sky); }
+  .gradient-warm { background: var(--gradient-warm); }
+  .gradient-baby { background: var(--gradient-baby); }
+  .gradient-parent { background: var(--gradient-parent); }
+
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-float { box-shadow: var(--shadow-float); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(158 38% 22%), hsl(152 35% 45%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Hide scrollbars on phone-frame inner scroll */
+  .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+}
+@keyframes ring-fill {
+  from { stroke-dashoffset: 283; }
+}
+@keyframes slide-up-fade {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-bounce {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+/* ─────────────────────────────────────────────────────────────────
+   Toast viewports clamped to the phone-frame mock width.
+   Both sonner and Radix portal into <body>, so we constrain them
+   globally instead of trying to nest them in the shell.
+   ───────────────────────────────────────────────────────────────── */
+[data-sonner-toaster] {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  width: min(100vw, 440px) !important;
+  max-width: 440px !important;
+}
+@media (min-width: 768px) {
+  [data-sonner-toaster] {
+    width: 376px !important;
+    max-width: 376px !important;
+  }
+}
+
+/* Radix toast viewport (legacy useToast) — same clamp */
+ol[data-radix-toast-viewport] {
+  left: 50% !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: 24px !important;
+  transform: translateX(-50%) !important;
+  width: min(100vw, 440px) !important;
+  max-width: 440px !important;
+  padding: 12px !important;
+  align-items: center !important;
+}
+@media (min-width: 768px) {
+  ol[data-radix-toast-viewport] {
+    bottom: 100px !important;
+    width: 376px !important;
+    max-width: 376px !important;
+  }
+}
