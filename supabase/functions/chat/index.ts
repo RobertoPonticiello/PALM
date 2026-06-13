@@ -1,4 +1,6 @@
 // Palm AI streaming chat edge function — italiano, profile-aware
+import { MEDICAL_SKILL } from "./medicalSkill.ts";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -729,8 +731,18 @@ Deno.serve(async (req) => {
 
   try {
     const { messages, profileId, demo, lang, pregnant } = await req.json();
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY non configurata");
+    // Provider selection: an explicit AI_PROVIDER wins; otherwise prefer OpenAI
+    // when its key is present, else fall back to the Lovable AI Gateway.
+    const provider = (Deno.env.get("AI_PROVIDER") ??
+      (OPENAI_API_KEY ? "openai" : "lovable")).toLowerCase();
+    if (provider === "openai" && !OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY non configurata");
+    }
+    if (provider === "lovable" && !LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY non configurata");
+    }
 
     const isDemo = demo === true;
     const profileContext =
@@ -739,7 +751,7 @@ Deno.serve(async (req) => {
         : (PROFILES[profileId as string] ?? ROMEO_CONTEXT);
     let SYSTEM_PROMPT = isDemo
       ? DEMO_PROMPT
-      : BASE_PROMPT + ACTIONS_GUIDE + profileContext;
+      : BASE_PROMPT + ACTIONS_GUIDE + profileContext + MEDICAL_SKILL;
 
     // Language override: when the user picked English in the app, force
     // Palm to reply in natural English regardless of the IT base prompt.
@@ -802,23 +814,49 @@ Deno.serve(async (req) => {
       }
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          ...messages,
-        ],
-        stream: true,
-      }),
-    });
+    const OPENAI_MODEL = Deno.env.get("OPENAI_MODEL") ?? "gpt-4o";
+    const chatMessages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages,
+    ];
+    // Reasoning models (o1/o3/o4…) reject a custom temperature; every other
+    // model gets a low temperature to reduce variance / fabrication (a medical
+    // safety lever — see MEDICAL_SKILL).
+    const isReasoningModel = /^o\d/i.test(OPENAI_MODEL);
+    const response = provider === "openai"
+      ? await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: OPENAI_MODEL,
+            messages: chatMessages,
+            stream: true,
+            ...(isReasoningModel ? {} : { temperature: 0.2 }),
+          }),
+        })
+      : await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${LOVABLE_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "google/gemini-3-flash-preview",
+            messages: chatMessages,
+            stream: true,
+          }),
+        });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        return new Response(
+          JSON.stringify({ error: "Chiave AI non valida o mancante. Controlla la secret OPENAI_API_KEY dell'edge function." }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Troppi messaggi in questo momento — aspetta un attimo e riprova." }),
